@@ -7,10 +7,12 @@
 }
 
 #container{
+    margin: 10%;
+    margin-left: 35%;
     display: grid;
     grid-gap: auto;
-    grid-template-rows: repeat(var(--grid-rows), 32px);
-    grid-template-columns: repeat(var(--grid-cols), 32px);
+    grid-template-rows: repeat(var(--grid-rows), 16px);
+    grid-template-columns: repeat(var(--grid-cols), 16px);
 }
 
 .grid-item{
@@ -18,25 +20,35 @@
     padding: 0.5em;
     border: 1px solid white;
     text-align: center;
-    background-color: #6666FF;
-    color: #FF7F50;
+    background-color: #50c878;
+    color: white;
     user-select: none; /* non-standard temporary workaround */
 }
 
 .grid-item-2{
-    font: 10px/24px Courier;
+    font: 1px/0px Courier;
     padding: 0.5em;
     border: 1px solid white;
     text-align: center;
-    background-color: #FF7F50;
-    color: #6666FF;
+    background-color: white;
+    color: #50c878;
     user-select: none; /* non-standard temporary workaround */
+}
+.grid-item:hover{
+    background-color: tomato;
 }
 </style>
 <html>
     <body>
         <div id="container">
         </div>
+        <form id="inputForm" action="nodes.html">
+            <input type="text" placeholder="(x, y)" id="sizeInput"><br>
+            <button type="button" onclick="getInput()">Resize</button>
+        </form>
+        <svg width="100" height="100">
+            <rect width="16" height="16" style="fill:#50c878;stroke-width:1;stroke:rgb(0,0,0)" />
+        </svg>
     </body>
     <script>
         const container = document.getElementById("container");
@@ -50,7 +62,7 @@
             // create i by j grid of cells
             for (var xy = 0; xy < (i*j); xy++){
                 let cell = document.createElement("div");
-                cell.innerText = (xy + 1);
+                //cell.innerText = (xy + 1);
                 container.appendChild(cell).className = "grid-item";
                 
                 // call cellClick on mousedown before the user lifts their mouse
@@ -60,13 +72,22 @@
                 // otherwise set to default style.
                 function cellClick(){
                     if (cell.className == "grid-item"){
-                        container.replaceChild(cell, cell).className = "grid-item-2"; 
+                        container.replaceChild(cell, cell).className = "grid-item-2";
+                        //if (cell.innerText === 2){
+                        //    container.replaceChild(cell, cell).className = "grid-item-2";
+                        //}
                     }
                     else{
                         container.replaceChild(cell, cell).className = "grid-item"; 
                     }
                 }
-                
+            
+                /*
+                function sleep(ms) {
+                    return new Promise(resolve => setTimeout(resolve, ms));
+                }
+                */
+
                 // optional checkerboard pattern
                 /*
                 if (xy % 2 === 0){
@@ -74,11 +95,20 @@
                 
                 }
                 */
+
+                //removechild
             };
         };
 
-        makeGrid(15, 15)
+        function getInput(){
+            var dimensions = document.getElementById("sizeInput").value;
+            console.log(dimensions);
+            makeGrid(dimensions, dimensions);
+        }
 
+        makeGrid(12, 31);
+        
+        /*
         const grids = document.querySelector('.grid-item');
         const style = window.getComputedStyle(grids);
         const backgroundColor = style.backgroundColor;
@@ -86,6 +116,7 @@
         if (x === 1){
             console.log(backgroundColor);
         };
+        */
 
     </script>
 </html>
