@@ -1,0 +1,163 @@
+<!DOCTYPE HTML>
+<meta charset="utf-8">
+<style>
+:root{
+    --grid-cols: 1;
+    --grid-rows: 1;
+}
+
+#container{
+    margin: 10%;
+    margin-left: 35%;
+    display: grid;
+    grid-gap: 1px;
+    grid-template-rows: repeat(var(--grid-rows), 15px);
+    grid-template-columns: repeat(var(--grid-cols), 15px);
+}
+
+.grid-item{
+    font: 10px/24px Courier;
+    padding: 0.5em;
+    border: 1px solid white;
+    text-align: center;
+    background-color: #50c878;
+    color: white;
+    user-select: none; /* non-standard temporary workaround */
+}
+
+.grid-item-2{
+    font: 1px/0px Courier;
+    padding: 0.5em;
+    border: 1px solid white;
+    text-align: center;
+    background-color: white;
+    color: #50c878;
+    user-select: none; /* non-standard temporary workaround */
+}
+.grid-item:hover{
+    background-color: tomato;
+    transform: scale(1.2);
+}
+.grid-item-2:hover{
+    background-color: lightgrey;
+    transform: scale(1.2);
+}
+
+</style>
+<html>
+    <body>
+        <input type="text" placeholder="Rows" id='rows'>
+        <input type="text" placeholder="Columns" id='cols'>
+        <button id='make-grid'>
+            Make Grid
+        </button>
+        <button id='delete-grid'>
+            Delete Grid
+        </button>
+        <div id="container">
+        </div>
+        <form id="inputForm" action="nodes.html">
+            <input type="text" placeholder="(x, y)" id="sizeInput"><br>
+            <button type="button" onclick="getInput()">Resize</button>
+        </form>
+
+        <svg width="15" height="15">
+            <rect width="15" height="15" style="fill:#50c878;stroke-width:1;stroke:rgb(0,0,0)" />
+        </svg>
+        <svg width="15" height="15">
+            <rect width="15" height="15" style="fill:#50c878;stroke-width:1;stroke:rgb(0,0,0)" />
+        </svg>
+        <svg width="15" height="15">
+            <rect width="15" height="15" style="fill:#50c878;stroke-width:1;stroke:rgb(0,0,0)" />
+        </svg>
+        
+    </body>
+    <script>
+        const container = document.getElementById("container");
+        var x = 1;
+        
+        function makeGrid(i, j) {
+            while(container.firstChild) {
+                container.firstChild.remove();
+            }
+
+            //container.style.setProperty('--grid-rows', i);
+            //container.style.setProperty('--grid-cols', j);
+
+            // create i by j grid of svgs
+            for (var xy = 0; xy < (i*j); xy++){
+                let svg = document.createElement("svg");
+                svg.setAttribute('width', '15');
+                svg.setAttribute('height', '15');
+                svg.setAttribute('style','border: 1px solid black');
+                document.body.appendChild(svg);
+                //svg.innerText = (xy + 1);
+                //container.appendChild(svg).className = "grid-item";
+                
+                // call svgClick on mousedown before the user lifts their mouse
+                svg.addEventListener("mousedown", svgClick, false);
+                
+                // When clicked, styles svg a color if the svg has the default style, 
+                // otherwise set to default style.
+                function svgClick(){
+                    if (svg.className == "grid-item"){
+                        container.replaceChild(svg, svg).className = "grid-item-2";
+                        //if (svg.innerText === 2){
+                        //    container.replaceChild(svg, svg).className = "grid-item-2";
+                        //}
+                    }
+                    else{
+                        container.replaceChild(svg, svg).className = "grid-item"; 
+                    }
+                }
+            
+                /*
+                function sleep(ms) {
+                    return new Promise(resolve => setTimeout(resolve, ms));
+                }
+                */
+
+                // optional checkerboard pattern
+                /*
+                if (xy % 2 === 0){
+                    container.appendChild(svg).className = "grid-item-2";
+                
+                }
+                */
+
+                //removechild
+            };
+        };
+
+        function getInput(){
+            var dimensions = document.getElementById("sizeInput").value;
+            console.log(dimensions);
+            makeGrid(dimensions, dimensions);
+        }
+
+        makeGrid(12, 31);
+        
+        function deleteGrid(){
+            while(container.firstChild) {
+                container.firstChild.remove();
+            }
+        }
+        
+        document.getElementById('make-grid').addEventListener('click', () => {
+            let rows = Number(document.getElementById('rows').value);
+            let cols = Number(document.getElementById('cols').value);
+            makeGrid(rows, cols);
+        });
+        document.getElementById('delete-grid').addEventListener('click', () => deleteGrid());
+        /*
+        const grids = document.querySelector('.grid-item');
+        const style = window.getComputedStyle(grids);
+        const backgroundColor = style.backgroundColor;
+
+        if (x === 1){
+            console.log(backgroundColor);
+        };
+        */
+
+    </script>
+</html>
